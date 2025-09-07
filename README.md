@@ -35,7 +35,7 @@ leanote2 保留了原 leanote 的许多核心功能，并根据现代需求做�
    - 更新了前端组件库和核心框架，确保 leanote2 兼容当前主流技术栈。
    - 对图片和附件的存储方式进行了重构，以提高数据的存取效率和稳定性。
 
-6. 更多详见Changelog.md
+6. 更多详见[Changelog.md](https://github.com/wiselike/leanote2/blob/master/Changelog.md)
 
 ## 二、特性
 
