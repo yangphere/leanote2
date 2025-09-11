@@ -167,6 +167,4 @@ jQuery.fn.pagination = function(maxentries, opts){
 		// call callback function
 		// opts.callback(current_page, this);
 	});
-}
-
-
+};

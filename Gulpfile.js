@@ -285,11 +285,11 @@ gulp.task('i18n', function() {
 });
 
 // 合并album需要的js
-gulp.task('concatAlbumJs', function() {
+gulp.task('concatAlbumJs', ['fileupload'], function() {
     var jss = [
-        //'libs/jquery/jquery.min.js',       // 这些基础库在之前已经打包过了，
-        //'libs/bootstrap/bootstrap.min.js', // 不单独使用album的话不用重复再打包
-        //'js/plugins/fileupload.min.js',
+        'libs/jquery/jquery.min.js',       // 这些基础库在之前已经打包过了，但还是需要再打包一遍
+        'libs/bootstrap/bootstrap.min.js',
+        'js/plugins/fileupload.min.js',
         'libs/jquery/jquery.pagination.js',
         'album/js/main.js',
     ];
@@ -300,7 +300,7 @@ gulp.task('concatAlbumJs', function() {
 
     return gulp.src(jss)
         .pipe(concat('album.all.js'))
-        .pipe(uglify())
+        // .pipe(uglify()) // 再次同时压缩jquery.min.js、bootstrap.min.js会异常
         .pipe(gulp.dest(base + '/album/js'));
 });
 

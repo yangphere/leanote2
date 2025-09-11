@@ -863,4 +863,4 @@ function mdGetImgSrc() {
 		return o.selectedImages[0];
 	}
 	return "";
-}
+};
