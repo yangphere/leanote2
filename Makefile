@@ -24,14 +24,14 @@ gulp:
 	@cd public/tinymce; grunt bundle --themes=leanote --plugins=autolink,link,leaui_image,leaui_mindmap,lists,hr,paste,searchreplace,leanote_nav,leanote_code,tabfocus,table,directionality,textcolor;
 	@gulp
 
-# build all and rerun leanote
+# build all and rerun leanote2
 release: gulp
 	@rm -rf release/
 	CGO_ENABLED=0 revel build . release/
-	rsync -azr --delete --delete-before --exclude github.com/wiselike/leanote2/conf/app.conf --exclude github.com/wiselike/leanote2/public/upload --exclude github.com/wiselike/leanote2/mongodb_backup -e 'ssh -p 22' release/src/ root@192.168.0.12:/root/dockers/leanote/leanote/src
-	rsync -azr release/leanote2  -e 'ssh -p 22' root@192.168.0.12:/root/dockers/leanote/leanote/leanote2
+	rsync -azr --delete --delete-before --exclude github.com/wiselike/leanote2/conf/app.conf --exclude github.com/wiselike/leanote2/public/upload --exclude github.com/wiselike/leanote2/mongodb_backup -e 'ssh -p 22' release/src/ root@192.168.0.12:/root/dockers/leanote/leanote2/src
+	rsync -azr release/leanote2  -e 'ssh -p 22' root@192.168.0.12:/root/dockers/leanote/leanote2/leanote2
 	rm -rf release/
-	ssh -p 22 root@192.168.0.12 "docker restart leanote"
+	ssh -p 22 root@192.168.0.12 "docker restart leanote2"
 
 github-release: gulp
 	@rm -rf release github-release;
