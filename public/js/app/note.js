@@ -399,7 +399,7 @@ Note.curChangedSaveIt = function(force, callback, isRefreshOrCtrls) {
 	// 如果当前没有笔记, 不保存
 	// 或者是共享的只读笔记
 	// 或者未进入编辑模式
-	if(!Note.curNoteId || Note.isReadOnly || LEA.readOnly) {
+	if ((!Note.curNoteId || Note.isReadOnly || LEA.readOnly) && (!force || !callback)) { // 笔记非编辑状态默认不保存直接返回；但更新了tag时，则不管笔记编辑状态都需要能保存tag变更
 		// log(!Note.curNoteId ? '无当前笔记' : '共享只读');
 		return;
 	}
