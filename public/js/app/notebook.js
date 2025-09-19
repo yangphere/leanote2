@@ -36,7 +36,8 @@ Notebook._updateNotebookNumberNotes = function(notebookId, n) {
 	if(notebook.NumberNotes < 0) {
 		notebook.NumberNotes = 0;
 	}
-	$("#numberNotes_" + notebookId).html(notebook.NumberNotes);
+	$("#numberNotes_" + notebookId).html(self.getAllNumberNotes(notebook));
+	self._updateNotebookNumberNotes(notebook.ParentNotebookId, 0); // 仅用于刷新父目录的笔记数量显示
 };
 // addNote, copyNote, moveNote
 Notebook.incrNotebookNumberNotes = function(notebookId) {
@@ -86,6 +87,16 @@ Notebook.getNotebookTitlePath = function(notebookId) {
 </ul>
 	*/
 
+Notebook.getAllNumberNotes = function(treeNode) {
+	if (!treeNode) return 0;
+
+	var allNumberNotes = (treeNode.NumberNotes || 0)
+	for (var i=0,l=treeNode.Subs.length; i<l; i++) {
+		allNumberNotes += this.getAllNumberNotes(treeNode.Subs[i]);
+	}
+	return allNumberNotes;
+}
+
 Notebook.getTreeSetting = function(isSearch, isShare){
 	var noSearch = !isSearch;
 
@@ -99,7 +110,7 @@ Notebook.getTreeSetting = function(isSearch, isShare){
 		icoObj.before(switchObj);
 		if(!isShare) {
 			if(!Notebook.isAllNotebookId(treeNode.NotebookId) && !Notebook.isTrashNotebookId(treeNode.NotebookId)) {
-				icoObj.after($('<span class="notebook-number-notes" id="numberNotes_' + treeNode.NotebookId + '">' + (treeNode.NumberNotes || 0) + '</span>'));
+				icoObj.after($('<span class="notebook-number-notes" id="numberNotes_' + treeNode.NotebookId + '">' + Notebook.getAllNumberNotes(treeNode) + '</span>'));
 				icoObj.after($('<span class="fa notebook-setting" title="setting"></span>'));
 			}
 		} else {
@@ -164,6 +175,33 @@ Notebook.getTreeSetting = function(isSearch, isShare){
 		}
 
 		ajaxPost("/notebook/dragNotebooks", {data: JSON.stringify(ajaxData)});
+
+		{
+			var thisBook = Notebook.getNotebook(treeNode.NotebookId);
+
+			if (parentNode && parentNode.NotebookId) {
+				var newParentBook = Notebook.getNotebook(parentNode.NotebookId);
+				thisBook.ParentNotebookId = newParentBook.NotebookId;
+				newParentBook.Subs.push(thisBook);
+			} else {
+				thisBook.ParentNotebookId = ""
+			}
+
+			if (treeNode.ParentNotebookId) {
+				var oldParentBook = Notebook.getNotebook(treeNode.ParentNotebookId);
+				for (var i = 0; i < oldParentBook.Subs.length; i++) {
+					if (oldParentBook.Subs[i].NotebookId === thisBook.NotebookId) {
+						oldParentBook.Subs.splice(i, 1);
+						break;
+					}
+				}
+			}
+
+			Notebook._updateNotebookNumberNotes(treeNode.ParentNotebookId, 0); // 更新旧的父笔记本的笔记数量
+			(parentNode) && Notebook._updateNotebookNumberNotes(parentNode.NotebookId, 0);  // 更新新的父笔记本的笔记数量
+		}
+
+		treeNode.ParentNotebookId = (parentNode) ? parentNode.NotebookId : ""
 
 		// 这里慢!
 		setTimeout(function() {
