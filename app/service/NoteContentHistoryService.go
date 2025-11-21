@@ -119,7 +119,7 @@ func (this *NoteContentHistoryService) DeleteHistory(noteId, userId, timeToDel s
 }
 
 func (this *NoteContentHistoryService) CleanImage(history *info.NoteContentHistory, newHistory *info.EachHistory, num int) {
-	if len(history.Histories) <= num {
+	if len(history.Histories) <= num || num < 0 {
 		return
 	}
 
