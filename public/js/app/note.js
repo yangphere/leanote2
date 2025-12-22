@@ -1095,7 +1095,7 @@ Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
 		}
 
 		var tmp;
-		if(note.ImgSrc) {
+		if(!HideNoteCoverImg && note.ImgSrc) {
 			tmp = tt(Note.itemTpl, classes, i, note.NoteId, note.ImgSrc, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
 		} else {
 			tmp = tt(Note.itemTplNoImg, classes, i, note.NoteId, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);

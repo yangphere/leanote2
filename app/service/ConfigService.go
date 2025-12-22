@@ -22,6 +22,7 @@ type ConfigService struct {
 	adminUserId       string
 	siteUrl           string
 	adminUsername     string
+	hideNoteCoverImg  bool
 	sessionExpireTime time.Duration // session过期时间，api校验session有效用
 	// 全局的
 	GlobalAllConfigs    map[string]interface{}
@@ -41,6 +42,7 @@ func (this *ConfigService) InitGlobalConfigs() bool {
 
 	this.adminUsername = revel.Config.StringDefault("adminUsername", "admin")
 	this.siteUrl, _ = revel.Config.String("site.url")
+	this.hideNoteCoverImg = revel.Config.BoolDefault("note.coverimg.hide", false)
 
 	userInfo := userService.GetUserInfoByAny(this.adminUsername)
 	if userInfo.UserId == "" {
@@ -541,6 +543,9 @@ func (this *ConfigService) GetNoteDomain() string {
 }
 func (this *ConfigService) GetNoteUrl() string {
 	return this.GetNoteDomain()
+}
+func (this *ConfigService) GetHideNoteCoverImg() bool {
+	return this.hideNoteCoverImg
 }
 
 // blog

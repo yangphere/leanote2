@@ -188,6 +188,8 @@ func (c BaseController) SetLocale() string {
 	c.ViewArgs["leaUrl"] = configService.GetLeaUrl()
 	c.ViewArgs["noteUrl"] = configService.GetNoteUrl()
 
+	c.ViewArgs["hideNoteCoverImg"] = configService.GetHideNoteCoverImg()
+
 	return lang
 }
 

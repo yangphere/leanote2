@@ -869,6 +869,7 @@ function log(o) { console.log(o);}
 var LEA = {sPath: ''};
 LEA.locale = "{{.locale}}";
 var UrlPrefix = '{{.siteUrl}}';
+var HideNoteCoverImg = {{or .hideNoteCoverImg false}};
 var UserInfo = {{.userInfo|jsonJs}};
 var notebooks = {{.notebooks|jsonJs}};
 var shareNotebooks = {{.shareNotebooks|jsonJs}};
