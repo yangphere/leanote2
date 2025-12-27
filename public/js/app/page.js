@@ -983,7 +983,7 @@ LeaAce = {
 		return this.canAce() && this.isAce;
 	},
 	getAceId: function () {
-		this.aceId++;
+		this._aceId++;
 		return "leanote_ace_" + (new Date()).getTime() + "_" + this._aceId;
 	},
 	initAce: function(id, val, force) {
@@ -1332,7 +1332,7 @@ LeaAce = {
 		var $pre = $(pre);
 		var id = this.getAceId();
 		$pre.attr('id', id);
-		var editor = this.initAce(id, "", true);
+		var editor = this.initAce(id, null, true);
 		if(editor) {
 			editor.focus();
 		}
@@ -1348,7 +1348,7 @@ LeaAce = {
 			var value = aceEditor.getValue();
 			// 表示有错
 			if(isAceError(value)) {
-				value = $pre.html();
+				value = $pre.text();
 			}
 			value = value.replace(/</g, '&lt').replace(/>/g, '&gt');
 			// var id = getAceId();
@@ -1369,7 +1369,10 @@ LeaAce = {
 					// replacePre.focus();
 					tinymceEditor.focus();
 					replacePre.trigger("click");
-					replacePre.html(value + " ");
+					replacePre.text(value);
+					if (!value || /\n$/.test(value)) {
+						replacePre.html(value + " ");
+					}
 					// log(">>>>>>>>>>>>>>")
 				}, 0);
 			}
