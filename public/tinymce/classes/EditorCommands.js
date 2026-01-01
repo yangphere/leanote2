@@ -647,20 +647,22 @@ define("tinymce/EditorCommands", [
 					// <p> </p><pre >xxx﻿​</pre>
 					// console.log('life');
 					// console.log(value);
-					value = value.replace(/<pre([^>]*?)>([\s\S]*?)<\/pre>/g, function(v, v1, v2) {
-						// v == "<pre>a, b, c</pre>"
-						var hasBookmark = false;
-						var b = '<span id="mce_marker" data-mce-type="bookmark">﻿​</span>';
-						if(v2.indexOf('id="mce_marker') != -1) { // mini后不是b了
-							hasBookmark = true;
-						}
+					value = value.replace(/<pre([^>]*?)>([\s\S]*?)<\/pre>/gi, function(v, v1, v2) {
+						// 只清洗“带 mce_marker 的那个 pre”，其它原样返回
+						if (v2.indexOf('mce_marker') === -1) return v;
 
-						v2 = v2.replace(/(<([^>]+)>)/gi, '').replace(/\s+$/, ''); // 把最后一个换行去掉
-						if(hasBookmark) {
-							v2 += b;
-						}
-						return "<pre " + v1 + ">" + v2 + "</pre>";
+						// 1) 提取 marker（兼容 id="mce_marker" / id=mce_marker）
+						var markerMatch = v2.match(/<span[^>]*\bid\s*=\s*["']?mce_marker["']?[^>]*>[\s\S]*?<\/span>/i);
+						var markerHtml = markerMatch ? markerMatch[0] : '';
+
+						// 2) 移除 marker 后再清洗其它标签
+						var body = v2.replace(/<span[^>]*\bid\s*=\s*["']?mce_marker["']?[^>]*>[\s\S]*?<\/span>/ig, '');
+						body = body.replace(/\r?\n$/, '');   // 把最后一个换行去掉
+
+						// 3) 把 marker 原样放回去
+						return "<pre" + v1 + ">" + body + markerHtml + "</pre>";
 					});
+
 					// console.log(value);
 
 					// Set the inner/outer HTML depending on if we are in the root or not
